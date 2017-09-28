@@ -3,8 +3,11 @@ package com.example.githubpublicrepos.features.main;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.githubpublicrepos.data.api.GithubService;
+import com.example.githubpublicrepos.data.entities.Repo;
 import com.example.githubpublicrepos.data.entities.User;
 import com.example.githubpublicrepos.utils.schedulers.BaseSchedulerProvider;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,8 +28,14 @@ public class MainViewModel extends ViewModel {
         this.schedulerProvider = schedulerProvider;
     }
 
-    Flowable<User> doSomething() {
+    Flowable<User> getUser() {
         return service.getUser("jakeWharton")
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.androidMainThread());
+    }
+
+    Flowable<List<Repo>> getRepositories() {
+        return service.listRepos("jakeWharton")
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.androidMainThread());
     }

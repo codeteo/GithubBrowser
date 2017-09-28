@@ -44,11 +44,18 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         // subscribe to the emissions of the user from the view model.
-        disposable.add(viewModel.doSomething()
+        disposable.add(viewModel.getUser()
                 .subscribe(
                         user -> tvName.setText(user.getName()),
                         throwable -> Timber.i("Error", throwable)
                 ));
+
+        disposable.add(viewModel.getRepositories()
+                .subscribe(
+                        repos -> Timber.i("got Repos"),
+                        throwable -> Timber.i("onError", throwable)
+                ));
+
     }
 
     @Override
