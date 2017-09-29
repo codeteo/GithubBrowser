@@ -4,13 +4,13 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.githubpublicrepos.R;
-import com.example.githubpublicrepos.data.entities.Repo;
+import com.example.githubpublicrepos.features.main.adapter.RepoViewModel;
 import com.example.githubpublicrepos.features.main.adapter.ReposAdapter;
 
 import java.util.List;
@@ -22,6 +22,8 @@ import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
+
+import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setAdapter(List<Repo> repos) {
+    private void setAdapter(List<RepoViewModel> repos) {
         adapter = new ReposAdapter(repos);
         rvRepoList.setAdapter(adapter);
-        rvRepoList.setLayoutManager(new LinearLayoutManager(this));
+        rvRepoList.addItemDecoration(new DividerItemDecoration(this, VERTICAL));
         adapter.notifyDataSetChanged();
     }
 

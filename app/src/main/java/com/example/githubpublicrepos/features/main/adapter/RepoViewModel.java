@@ -6,12 +6,14 @@ package com.example.githubpublicrepos.features.main.adapter;
 
 public class RepoViewModel {
 
+    private String userLogin;
     private String name;
-    private String fullname;
+    private String repoFullname;
 
-    public RepoViewModel(String name, String fullname) {
+    public RepoViewModel(String name, String fullname, String userLogin) {
         this.name = name;
-        this.fullname = fullname;
+        this.repoFullname = fullname;
+        this.userLogin = userLogin;
     }
 
     public String getName() {
@@ -22,11 +24,19 @@ public class RepoViewModel {
         this.name = name;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getRepoFullname() {
+        return repoFullname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setRepoFullname(String repoFullname) {
+        this.repoFullname = repoFullname;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 }

@@ -12,13 +12,14 @@ class RepoViewHolder extends BaseViewHolder<RepoViewModel> {
 
     private final ItemRepoBinding binding;
 
-    RepoViewHolder(ItemRepoBinding binding) {
-        super(binding.getRoot());
-        this.binding = binding;
+    RepoViewHolder(ItemRepoBinding itemBinding) {
+        super(itemBinding.getRoot());
+        this.binding = itemBinding;
     }
 
     @Override
     public void setViewModel(RepoViewModel viewModel) {
         binding.setRepo(viewModel);
+        binding.executePendingBindings();
     }
 }

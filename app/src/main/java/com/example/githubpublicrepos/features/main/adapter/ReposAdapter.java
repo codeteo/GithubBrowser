@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.example.githubpublicrepos.data.entities.Repo;
 import com.example.githubpublicrepos.databinding.ItemRepoBinding;
 import com.example.githubpublicrepos.features.main.MainActivity;
 
@@ -16,9 +15,9 @@ import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<RepoViewHolder>{
 
-    private List<Repo> dataset;
+    private List<RepoViewModel> dataset;
 
-    public ReposAdapter(List<Repo> dataset) {
+    public ReposAdapter(List<RepoViewModel> dataset) {
         this.dataset = dataset;
     }
 
@@ -32,7 +31,8 @@ public class ReposAdapter extends RecyclerView.Adapter<RepoViewHolder>{
 
     @Override
     public void onBindViewHolder(RepoViewHolder holder, int position) {
-        final Repo repo = dataset.get(position);
+        final RepoViewModel repoViewModel = dataset.get(position);
+        holder.setViewModel(repoViewModel);
     }
 
     @Override
