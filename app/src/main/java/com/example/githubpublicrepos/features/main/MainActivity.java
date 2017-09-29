@@ -4,10 +4,16 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.githubpublicrepos.R;
+import com.example.githubpublicrepos.data.entities.Repo;
+import com.example.githubpublicrepos.features.main.adapter.ReposAdapter;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,8 +22,6 @@ import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
-
-import static android.view.View.INVISIBLE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
 
     private CompositeDisposable disposable = new CompositeDisposable();
+
+    private ReposAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +58,27 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(
                         user -> {
                             Timber.i("onSuccess: ", user.getName());
-                            tvLoadingText.setVisibility(INVISIBLE);
+                            tvLoadingText.setVisibility(View.GONE);
                         },
                         throwable -> Timber.i("Error", throwable)
                 ));
 
         disposable.add(viewModel.getRepositories()
                 .subscribe(
-                        repos -> Timber.i("got Repos"),
-                        throwable -> Timber.i("onError", throwable)
+                        repos -> {
+                            Timber.i("got Repos");
+                            setAdapter(repos);
+                        },
+                        throwable -> Timber.i("onError", throwable.getMessage())
                 ));
 
+    }
+
+    private void setAdapter(List<Repo> repos) {
+        adapter = new ReposAdapter(repos);
+        rvRepoList.setAdapter(adapter);
+        rvRepoList.setLayoutManager(new LinearLayoutManager(this));
+        adapter.notifyDataSetChanged();
     }
 
     @Override
