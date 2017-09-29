@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.example.githubpublicrepos.R;
@@ -16,9 +17,12 @@ import dagger.android.AndroidInjection;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
+import static android.view.View.INVISIBLE;
+
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.tv_main_name) TextView tvName;
+    @BindView(R.id.tv_main_loading) TextView tvLoadingText;
+    @BindView(R.id.rv_list_repos) RecyclerView rvRepoList;
 
     @Inject
     ViewModelProvider.Factory viewModelProvider;
@@ -46,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
         // subscribe to the emissions of the user from the view model.
         disposable.add(viewModel.getUser()
                 .subscribe(
-                        user -> tvName.setText(user.getName()),
+                        user -> {
+                            Timber.i("onSuccess: ", user.getName());
+                            tvLoadingText.setVisibility(INVISIBLE);
+                        },
                         throwable -> Timber.i("Error", throwable)
                 ));
 

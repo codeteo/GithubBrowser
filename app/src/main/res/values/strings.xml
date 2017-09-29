@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GithubPublicRepos</string>
+    <string name="loading_repos">Loading Repos…</string>
 </resources>
