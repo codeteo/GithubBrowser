@@ -1,22 +1,15 @@
 package com.example.githubpublicrepos.features.main;
 
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
 
 import com.example.githubpublicrepos.data.api.GithubService;
-import com.example.githubpublicrepos.data.entities.Repo;
 import com.example.githubpublicrepos.data.entities.User;
-import com.example.githubpublicrepos.data.mappers.RepoMapper;
 import com.example.githubpublicrepos.features.main.adapter.RepoViewModel;
 import com.example.githubpublicrepos.utils.schedulers.BaseSchedulerProvider;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
 
 /**
  * View model for {@link MainActivity}
@@ -33,32 +26,17 @@ public class MainViewModel extends ViewModel {
         this.schedulerProvider = schedulerProvider;
     }
 
-    Flowable<User> getUser() {
-        return service.getUser("jakeWharton")
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.androidMainThread());
+    Flowable<User> getUser(String login) {
+        return service.getUser(login);
     }
 
-    Flowable<List<RepoViewModel>> getRepositories() {
+    Flowable<RepoViewModel> getRepositories() {
         return service.listRepos("jakeWharton")
-                .map(mapReposToViewModel())
+                .flatMap(Flowable::fromIterable)
+                .flatMap(repo -> getUser(repo.getOwner().getLogin())
+                        .map(user -> new RepoViewModel(repo.getName(), repo.getRepoFullname(), user.getName())))
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.androidMainThread());
-    }
-
-    @NonNull
-    private Function<List<Repo>, List<RepoViewModel>> mapReposToViewModel() {
-        return repos -> {
-
-            List<RepoViewModel> repoViewModelList = new ArrayList<>();
-
-            for (Repo repo: repos ){
-                RepoViewModel viewModel = RepoMapper.from(repo);
-                repoViewModelList.add(viewModel);
-            }
-
-            return repoViewModelList;
-        };
     }
 
 }

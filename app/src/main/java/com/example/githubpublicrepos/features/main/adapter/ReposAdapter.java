@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import com.example.githubpublicrepos.databinding.ItemRepoBinding;
 import com.example.githubpublicrepos.features.main.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Adapter class for list of repos in {@link MainActivity}.
@@ -17,8 +20,13 @@ public class ReposAdapter extends RecyclerView.Adapter<RepoViewHolder>{
 
     private List<RepoViewModel> dataset;
 
-    public ReposAdapter(List<RepoViewModel> dataset) {
-        this.dataset = dataset;
+    public ReposAdapter() {
+        dataset = new ArrayList<>();
+    }
+
+    public void addData(RepoViewModel repoViewModel) {
+        dataset.add(repoViewModel);
+        notifyItemInserted(dataset.size() -1);
     }
 
     @Override

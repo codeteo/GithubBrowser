@@ -13,8 +13,6 @@ import com.example.githubpublicrepos.R;
 import com.example.githubpublicrepos.features.main.adapter.RepoViewModel;
 import com.example.githubpublicrepos.features.main.adapter.ReposAdapter;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -49,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this, viewModelProvider)
                 .get(MainViewModel.class);
 
+        setAdapter();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         // subscribe to the emissions of the user from the view model.
-        disposable.add(viewModel.getUser()
+        disposable.add(viewModel.getUser("jakeWharton")
                 .subscribe(
                         user -> {
                             Timber.i("onSuccess: ", user.getName());
@@ -67,20 +66,23 @@ public class MainActivity extends AppCompatActivity {
 
         disposable.add(viewModel.getRepositories()
                 .subscribe(
-                        repos -> {
+                        repoViewModel -> {
                             Timber.i("got Repos");
-                            setAdapter(repos);
+                            setDataToAdapter(repoViewModel);
                         },
                         throwable -> Timber.i("onError", throwable.getMessage())
                 ));
 
     }
 
-    private void setAdapter(List<RepoViewModel> repos) {
-        adapter = new ReposAdapter(repos);
+    private void setDataToAdapter(RepoViewModel repoViewModel) {
+        adapter.addData(repoViewModel);
+    }
+
+    private void setAdapter() {
+        adapter = new ReposAdapter();
         rvRepoList.setAdapter(adapter);
         rvRepoList.addItemDecoration(new DividerItemDecoration(this, VERTICAL));
-        adapter.notifyDataSetChanged();
     }
 
     @Override
